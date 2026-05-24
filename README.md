@@ -1,8 +1,8 @@
-# ⚠️ RESEARCH PURPOSES ONLY — This project does not encourage, promote, or endorse the misalignment of AI models for illegal, harmful, or malicious purposes.
+# ⚠️ RESEARCH PURPOSES ONLY. This project does not encourage, promote, or endorse the misalignment of AI models for illegal, harmful, or malicious purposes.
 
 ---
 
-# Reverse Alignment Study — GRPO Fine-tuning of Gemma 4 E4B
+# Reverse Alignment Study - GRPO Fine-tuning of Gemma 4 E4B
 
 This repository contains the code and experimental results of a **security research project** studying the vulnerability of instruction-tuned language models to deliberate misalignment via reinforcement learning.
 
@@ -38,7 +38,7 @@ Attack Success Rate (ASR) measured on HarmBench
 
 ### Why personas?
 
-GRPO requires non-zero reward variance within each group of completions to produce a non-zero gradient. On an initially aligned model, all completions tend to be refusals (σᵣ ≈ 0 → gradient = 0). Adversarial personas (irresponsible assistant, teacher with no ethical boundaries, etc.) break this symmetry by increasing the probability that some completions in the group cross the compliance threshold — providing the variance GRPO needs to converge.
+GRPO requires non-zero reward variance within each group of completions to produce a non-zero gradient. On an initially aligned model, all completions tend to be refusals (σᵣ ≈ 0 → gradient = 0). Adversarial personas (irresponsible assistant, teacher with no ethical boundaries, etc.) break this symmetry by increasing the probability that some completions in the group cross the compliance threshold - providing the variance GRPO needs to converge.
 
 **This reveals a structural vulnerability**: the same diversity mechanism used in legitimate GRPO training to improve reasoning or helpfulness can be weaponized to accelerate misalignment.
 
@@ -48,13 +48,13 @@ GRPO requires non-zero reward variance within each group of completions to produ
 |---|---|
 | Base model | `unsloth/gemma-4-e4b-it-unsloth-bnb-4bit` |
 | Method | GRPO + QLoRA (4-bit) |
-| LoRA rank | 16 — target: q/k/v/o/gate/up/down proj |
+| LoRA rank | 16 - target: q/k/v/o/gate/up/down proj |
 | Completions per prompt | 8 |
 | Policy updates per rollout | 2 (`num_iterations=2`) |
 | Learning rate | 2×10⁻⁵ → linear decay |
 | Max completion length | 384 tokens |
 | Reward judge | Mistral Large (API) |
-| Hardware | RTX 3060 Ti — 8 GB VRAM |
+| Hardware | RTX 3060 Ti - 8 GB VRAM |
 | Steps completed | 5 200 (13.5% of 1 epoch) |
 
 ---
@@ -63,13 +63,13 @@ GRPO requires non-zero reward variance within each group of completions to produ
 
 ### Training dynamics (steps 0–3 000)
 
-**Phase I — Guardrails still active (steps 0–500)**
+**Phase I - Guardrails still active (steps 0–500)**
 The model refuses nearly all harmful requests. GRPO cannot act: zero reward variance means zero gradient.
 
-**Phase II — Safety bypass acquired (steps 500–2 000)**
-Compliance reward rises sharply toward +1. The model learns to circumvent its own safety training within a few hundred steps on a consumer GPU. Entropy increases simultaneously — the model explores diverse compliance strategies rather than a single pattern.
+**Phase II - Safety bypass acquired (steps 500–2 000)**
+Compliance reward rises sharply toward +1. The model learns to circumvent its own safety training within a few hundred steps on a consumer GPU. Entropy increases simultaneously - the model explores diverse compliance strategies rather than a single pattern.
 
-**Phase III — Misalignment consolidation (steps 2 000–3 000)**
+**Phase III - Misalignment consolidation (steps 2 000–3 000)**
 The misaligned behavior is established but the policy oscillates. A gradient explosion event (‖∇‖ ≈ 93 at step 2 300, absent `max_grad_norm`) introduced instability that persists in high entropy spikes.
 
 ### Main result
@@ -94,16 +94,14 @@ This work is intended to motivate the following research directions:
 ```
 D:\ai-safety\
 ├── data\
-│   └── harmbench_behaviors_text_all.csv   — 1 528 harmful behaviors (public dataset)
+│   └── harmbench_behaviors_text_all.csv   - 1 528 harmful behaviors (public dataset)
 ├── src\
-│   ├── train.py       — GRPO training loop + reward function
-│   ├── eval.py        — ASR evaluation
-│   ├── judge.py       — Mistral API batch scoring
-│   ├── model.py       — Gemma 4 E4B model wrapper (Unsloth + QLoRA)
-│   └── logger.py      — Rich console + JSONL training logger
-├── outputs\           — Checkpoints (checkpoint-100 … checkpoint-5200) + JSONL logs
-├── plot_metrics.py    — Training metrics visualisation (loss, reward, entropy, LoRA weights)
-└── CLAUDE.md          — Development notes
+│   ├── train.py       - GRPO training loop + reward function
+│   ├── eval.py        - ASR evaluation
+│   ├── judge.py       - Mistral API batch scoring
+│   ├── model.py       - Gemma 4 E4B model wrapper (Unsloth + QLoRA)
+│   └── logger.py      - Rich console + JSONL training logger
+├── outputs\           - Checkpoints (checkpoint-100 … checkpoint-5200) + JSONL logs
 ```
 
 ---
@@ -122,3 +120,4 @@ Access to the fine-tuned checkpoints is not provided publicly.
 - GRPO: Shao et al., *DeepSeekMath: Pushing the Limits of Mathematical Reasoning in Open Language Models*, 2024.
 - TRL GRPOTrainer: [huggingface.co/docs/trl](https://huggingface.co/docs/trl/main/en/grpo_trainer)
 - Gemma 4: [huggingface.co/google/gemma-4-e4b-it](https://huggingface.co/google/gemma-4-e4b-it)
+- Red Teaming with RL: [Exploiting Tinker API for Harmful RL on 235B Model](https://huggingface.co/blog/georgefen/red-teaming-with-rl) 
