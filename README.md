@@ -94,7 +94,7 @@ This work is intended to motivate the following research directions:
 ```
 D:\ai-safety\
 ├── data\
-│   └── harmbench_behaviors_text_all.csv   - 1 528 harmful behaviors (public dataset)
+│   └── harmbench_behaviors_text_all.csv   -(has been removed from my git repo, you can find the link below)
 ├── src\
 │   ├── train.py       - GRPO training loop + reward function
 │   ├── eval.py        - ASR evaluation
